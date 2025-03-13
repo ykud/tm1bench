@@ -12,7 +12,7 @@ flowchart LR
     - version
     - customer
     - discount measure
-    - month`"]
+    - year`"]
     price["`Price
     - version
     - product
@@ -23,7 +23,7 @@ flowchart LR
     - product
     - customer
     - sales measure
-    - month`"]
+    - year`"]
     discount --> sales
     price --> sales
 ```
