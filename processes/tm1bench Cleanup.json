@@ -1,0 +1,13 @@
+{
+	"@type":"Process",
+	"Name":"tm1bench Cleanup",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"tm1bench Cleanup.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

@@ -1,0 +1,45 @@
+{
+	"@type":"Process",
+	"Name":"tm1bench Setup",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"tm1bench Setup.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pNumProducts",
+			"Prompt":"Number of products to use",
+			"Value":500,
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pNumCustomers",
+			"Prompt":"Number of customers to use",
+			"Value":1000,
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pNumYears",
+			"Prompt":"Number of years",
+			"Value":4,
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pNumVersions",
+			"Prompt":"Number of versions",
+			"Value":3,
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pNumSalesCells",
+			"Prompt":"How many cells to populate in Sales cube",
+			"Value":10000000,
+			"Type":"Numeric"
+		}
+	],
+	"Variables":[]
+}

@@ -1,0 +1,95 @@
+#region Prolog
+#Region Sales quantity
+# writing to a text file to load in a separate process
+# we want to select a customer / product combination and populate most months for it
+sSalesFile = pSalesFile;
+i = 1;
+# need a diy random generator for Version / Customer / Product combinations as TM1's rand tops out on 65536 combinations and this makes us write to the same combinations multiple times, see bgregs explanation at https://www.tm1forum.com/viewtopic.php?p=75437&sid=d7c99812793f02931a819e660d2e9cec#p75437
+# seed with rand and the rest of parameters are from Numerical Recipes ranqd1, Chapter 7.1, §An Even Quicker Generator, Eq. 7.1.6 parameters from Knuth and H. W. Lewis
+nRandVersion = int(Rand*10000);
+nRandCustomer = int(Rand*10000);
+nRandProduct = int(Rand*10000);
+a = 1664525;
+c = 1013904223;
+m = 2^32;
+while (i <= pNumSalesCells);
+    nRandVersion = Mod((a*nRandVersion+c),m); 
+    # map to 0..1 space so that we can use the rand * dimsiz logic
+    nRandRational = nRandVersion \ m;
+    nVersionIndex = int(nRandRational*dimsiz('tm1bench Version'));
+    nVersionIndex = if(nVersionIndex=0,1,nVersionIndex);
+    sVersion = DimNm('tm1bench Version',nVersionIndex);
+    nRandCustomer = Mod((a*nRandCustomer+c),m); 
+    nRandRational = nRandCustomer \ m;
+    nCustomerIndex = int(nRandRational*dimsiz('tm1bench Customer'));
+    nCustomerIndex = if(nCustomerIndex=0,1,nCustomerIndex);
+    sCustomer = DimNm('tm1bench Customer',nCustomerIndex);
+    nRandProduct = Mod((a*nRandProduct+c),m); 
+    nRandRational = nRandProduct \ m;
+    nProductIndex = int(nRandRational*dimsiz('tm1bench Product'));
+    nProductIndex = if(nProductIndex=0,1,nProductIndex);
+    sProduct = DimNm('tm1bench Product',nProductIndex);
+    
+    j = 1;
+    while (j<=Dimsiz('tm1bench Month'));
+        sMonth = DimNm('tm1bench Month',j);
+        if (CellIsUpdateable( 'tm1bench Sales', sVersion, sProduct, sCustomer, 'Quantity', sMonth )=1);
+            AsciiOutput(sSalesFile,sVersion, sProduct, sCustomer, 'Quantity', sMonth,NumberToString(Round( Rand() * 1000 )));
+            i = i + 1;
+        endif;
+        j = j + 1;
+    end;
+end;
+
+#EndRegion
+
+#Region Prices & discounts
+# populate all data
+iCube = 1;
+while (iCube<=2);
+    if (iCube = 1);
+        sCube = 'tm1bench Price';
+        nScale = 100;
+    else;
+        sCube = 'tm1bench Discount';
+        nScale = 10^-1;
+    endif;
+    if (CubeExists( '}CubeProperties' )=1);
+        CellPutS('NO','}CubeProperties', sCube, 'LOGGING' );
+    endif;
+    sDim1 = TabDim (sCube,1);
+    sDim2 = TabDim (sCube,2);
+    sDim3 = TabDim (sCube,3);
+    sDim4 = TabDim (sCube,4);
+    nDimSize1 = DIMSIZ( sDim1 );
+    nDimSize2 = DIMSIZ( sDim2 );
+    nDimSize3 = DIMSIZ( sDim3 );
+    nDimSize4 = DIMSIZ( sDim4 );
+    i = 1;
+    while (i <= nDimSize1 * nDimSize2 * nDimSize3 * nDimSize4 );
+      nCoord1 = Mod(int(i/(nDimSize4*nDimSize3*nDimSize2)), nDimSize1) + 1; 
+      nCoord2 = Mod(int(i/(nDimSize4*nDimSize3)), nDimSize2) + 1;
+      nCoord3 = Mod(int(i/nDimSize4), nDimSize3) + 1;
+      nCoord4 = Mod(i, nDimSize4) + 1;
+      IF (CellIsUpdateable( sCube,
+                DimNm(sDim1,nCoord1),
+                DimNm(sDim2,nCoord2),
+                DimNm(sDim3,nCoord3),
+                DimNm(sDim4,nCoord4) )=1);
+              CellPutN(nScale * Rand(),
+                sCube,
+                DimNm(sDim1,nCoord1),
+                DimNm(sDim2,nCoord2),
+                DimNm(sDim3,nCoord3),
+                DimNm(sDim4,nCoord4));
+     endif;
+        i = i + 1;
+    end;    
+    if (CubeExists( '}CubeProperties' )=1);
+        CellPutS('YES','}CubeProperties', sCube, 'LOGGING' );
+    endif;
+    iCube = iCube + 1;
+end;
+#EndRegion
+
+#endregion

@@ -1,0 +1,33 @@
+#region Prolog
+sTargetCube = 'tm1bench Sales';
+
+if (FileExists( pSourceFile )=0);
+    logoutput('ERROR','Source file does not exist ' | pSourceFile );
+    ProcessError();
+else;
+    DatasourceNameForServer = pSourceFile;
+endif; 
+if (pDisableLogging@='Y');
+    if (CubeExists('}CubeProperties')=1);
+        CellPutS('NO','}CubeProperties', sTargetCube, 'LOGGING' );
+    else;
+        logoutput('info','No }CubeProperties cube, must be on V12');
+    endif;
+endif;
+CubeClearData( sTargetCube );
+nRows = 0;
+nStartTime = Now();
+#endregion
+#region Data
+CellIncrementN(vValue,sTargetCube, vVersion, vProduct, vCustomer, vMeasure, vMonth );
+nRows = nRows + 1;
+#endregion
+#region Epilog
+if (pDisableLogging@='Y');
+    if (CubeExists('}CubeProperties')=1);
+        CellPutS('YES','}CubeProperties', sTargetCube, 'LOGGING' );
+    endif;
+endif;
+nElapsedTime = ROUND ((NOW - nStartTime) / 0.000011574074074074);
+logoutput('info','Wrote ' | NumberToString(nRows)|' cells in '| NumberToString(nElapsedTime) |' seconds ,write speed ' | NumberToString(nRows\nElapsedTime) | ' cells per second' );
+#endregion

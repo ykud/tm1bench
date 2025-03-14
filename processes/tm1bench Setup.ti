@@ -1,0 +1,219 @@
+#region Prolog
+
+#Region create the dimensions
+
+#Region Product
+sDim = 'tm1bench Product';
+if (DimensionExists( sDim )=0);
+    DimensionCreate( sDim );
+else;
+    DimensionDeleteAllElements( sDim );
+endif;
+sTopElement = 'All product';
+DimensionElementInsert( sDim, '', sTopElement, 'C' );
+i = 1;
+while (i<=pNumProducts);
+    sEl = 'Product ' | NumberToString( i );
+    DimensionElementInsert( sDim, '', sEl, 'N' );
+    DimensionElementComponentAdd( sDim, sTopElement, sEl, 1 );
+    i = i + 1;
+end;
+#EndRegion
+
+#Region Customer
+sDim = 'tm1bench Customer';
+if (DimensionExists( sDim )=0);
+    DimensionCreate( sDim );
+else;
+    DimensionDeleteAllElements( sDim );
+endif;
+sTopElement = 'All customer';
+DimensionElementInsert( sDim, '', sTopElement, 'C' );
+i = 1;
+while (i<=pNumCustomers);
+    sEl = 'Customer ' | NumberToString( i );
+    DimensionElementInsert( sDim, '', sEl, 'N' );
+    DimensionElementComponentAdd( sDim, sTopElement, sEl, 1 );
+    i = i + 1;
+end;
+#EndRegion
+
+#Region version
+sDim = 'tm1bench Version';
+if (DimensionExists( sDim )=0);
+    DimensionCreate( sDim );
+else;
+    DimensionDeleteAllElements( sDim );
+endif;
+i = 1;
+while (i<=pNumVersions);
+    sEl = 'Version ' | NumberToString( i );
+    DimensionElementInsert( sDim, '', sEl, 'N' );
+    i = i + 1;
+end;
+#EndRegion
+
+#Region month
+sDim = 'tm1bench Month';
+if (DimensionExists( sDim )=0);
+    DimensionCreate( sDim );
+else;
+    DimensionDeleteAllElements( sDim );
+endif;
+sTopElement = 'All years';
+DimensionElementInsert( sDim, '', sTopElement, 'C' );
+sStartYear = TIMST( Now, '\Y', 1 );
+i = 0;
+while (i<pNumYears);
+    sYear = NumberToString(StringToNumber( sStartYear ) + i);
+    DimensionElementInsert( sDim, '', sYear, 'C' );
+    DimensionElementComponentAdd( sDim, sTopElement, sYear, 1 );
+    j = 1;
+    while (j<=12);
+        sEl = sYear | NumberToStringEx( j, '00', '.', ',' );
+        DimensionElementInsert( sDim, '', sEl, 'N' );
+        DimensionElementComponentAdd( sDim, sYear, sEl, 1 );
+        j = j + 1;
+    end;
+    i = i + 1;
+end;
+
+#EndRegion
+#Region Year
+sDim = 'tm1bench Year';
+if (DimensionExists( sDim )=0);
+    DimensionCreate( sDim );
+else;
+    DimensionDeleteAllElements( sDim );
+endif;
+sTopElement = 'All years';
+DimensionElementInsert( sDim, '', sTopElement, 'C' );
+sStartYear = TIMST( Now, '\Y', 1 );
+i = 0;
+while (i<pNumYears);
+    sYear = NumberToString(StringToNumber( sStartYear ) + i);
+    DimensionElementInsert( sDim, '', sYear, 'N' );
+    DimensionElementComponentAdd( sDim, sTopElement, sYear, 1 );
+    i = i + 1;
+end;
+
+#EndRegion
+
+#EndRegion
+
+#Region sales measures
+sDim = 'tm1bench Sales measure';
+if (DimensionExists( sDim )=0);
+    DimensionCreate( sDim );
+else;
+    DimensionDeleteAllElements( sDim );
+endif;
+
+DimensionElementInsert( sDim, '', 'Quantity', 'N' );
+DimensionElementInsert( sDim, '', 'Price', 'N' );
+DimensionElementInsert( sDim, '', 'Sales', 'N' );
+DimensionElementInsert( sDim, '', 'Discount', 'N' );
+DimensionElementInsert( sDim, '', 'Revenue', 'C' );
+DimensionElementComponentAdd( sDim, 'Revenue', 'Sales', 1 );
+DimensionElementComponentAdd( sDim, 'Revenue', 'Discount', -1 );
+DimensionElementInsert( sDim, '', 'Discount %', 'C' );
+DimensionElementComponentAdd( sDim, 'Discount %', 'Discount', 1 );
+AttrInsert( sDim, '', 'format', 'S' );
+
+#EndRegion
+
+#Region discount measures
+sDim = 'tm1bench Discount measure';
+if (DimensionExists( sDim )=0);
+    DimensionCreate( sDim );
+else;
+    DimensionDeleteAllElements( sDim );
+endif;
+DimensionElementInsert( sDim, '', 'Discount %', 'N' );
+AttrInsert( sDim, '', 'format', 'S' );
+#EndRegion
+#Region price measures
+sDim = 'tm1bench Price measure';
+if (DimensionExists( sDim )=0);
+    DimensionCreate( sDim );
+else;
+    DimensionDeleteAllElements( sDim );
+endif;
+DimensionElementInsert( sDim, '', 'Price', 'N' );
+
+#EndRegion
+#EndRegion
+
+
+
+#Region Create the cubes
+
+# Months last to make it more compact --don't have a TI function to reorder the cube dims
+if (CubeExists( 'tm1bench Sales' )=1);
+    CubeDestroy( 'tm1bench Sales' );
+endif;
+CubeCreate( 'tm1bench Sales', 
+          'tm1bench Version',
+          'tm1bench Product',
+          'tm1bench Customer',
+          'tm1bench Sales measure',
+          'tm1bench Month');
+if (CubeExists( 'tm1bench Discount' )=1);
+    CubeDestroy( 'tm1bench Discount' );
+endif;
+CubeCreate( 'tm1bench Discount', 
+          'tm1bench Version',
+          'tm1bench Customer',
+          'tm1bench Year',
+          'tm1bench Discount measure'
+);
+if (CubeExists( 'tm1bench Price' )=1);
+    CubeDestroy( 'tm1bench Price' );
+endif;
+CubeCreate( 'tm1bench Price', 
+          'tm1bench Version',
+          'tm1bench Product',
+          'tm1bench Year', 
+          'tm1bench Price measure');
+
+
+
+#EndRegion
+#endregion
+#region Epilog
+
+#Region formats
+AttrPuts('c:#,###.#0%;(#,###.#0%);""','tm1bench Sales measure','Discount %','format');
+AttrPuts('c:#,###;(#,###);""','tm1bench Sales measure','Sales','format');
+AttrPuts('c:#,###;(#,###);""','tm1bench Sales measure','Revenue','format');
+AttrPuts('c:#,###;(#,###);""','tm1bench Sales measure','Discount','format');
+AttrPuts('c:#,###;(#,###);""','tm1bench Sales measure','Quantity','format');
+
+AttrPutS( 'c:#,###.#0%;(#,###.#0%);""','tm1bench Discount measure','Discount %','format' );
+#EndRegion
+
+#Region Sales rule
+CubeRuleAppend( 'tm1bench Sales', 'SKIPCHECK;',0);
+CubeRuleAppend( 'tm1bench Sales', '[''Price''] = N: DB(''tm1bench Price'', !tm1bench Version, !tm1bench Product,Elpar(''tm1bench Month'', !tm1bench Month,1), ''Price'');',0);
+CubeRuleAppend( 'tm1bench Sales', '[''Price''] = C: [''Sales''] \ [''Quantity''];',0);
+CubeRuleAppend( 'tm1bench Sales', '[''Sales''] = N: [''Quantity''] * [''Price''];',0);
+CubeRuleAppend( 'tm1bench Sales', '[''Discount''] = N: [''Sales''] * Db(''tm1bench Discount'', !tm1bench Version, !tm1bench Customer,Elpar(''tm1bench Month'', !tm1bench Month,1), ''Discount %'');',0);
+CubeRuleAppend( 'tm1bench Sales', '[''Discount %''] = C: [''Discount''] \ [''Sales''];',0);
+CubeRuleAppend( 'tm1bench Sales', 'FEEDERS;',0);
+CubeRuleAppend( 'tm1bench Sales', '[''Quantity'']=>[''Sales''],[''Discount''];',0);
+#EndRegion
+
+#Region generate and upload data
+sSalesFile = 'tm1bench_sales_data_'|NumberToString(Millitime())|'.csv';
+ExecuteProcess('tm1bench Generate test data',
+	'pNumSalesCells', pNumSalesCells,
+	'pSalesFile', sSalesFile );
+ExecuteProcess( 'tm1bench Sales load data',
+	'pSourceFile', sSalesFile,
+	'pDisableLogging', 'Y' );
+if (FileExists( sSalesFile )=1);
+    ASCIIDelete( sSalesFile );
+endif;
+
+#EndRegion
+#endregion

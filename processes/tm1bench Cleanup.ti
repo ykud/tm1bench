@@ -1,0 +1,38 @@
+#region Prolog
+
+sPrefix = 'tm1bench';
+#Region cubes
+i = 1;
+while (i<=DIMSIZ( '}Cubes' ));
+    sEl = DimNm ('}Cubes',i);
+    if (SCAN( sPrefix, sEl )=1);
+        CubeDestroy( sEl );
+    else;
+        i = i + 1;
+    endif;
+end;
+#EndRegion
+
+#Region dimensions
+i = 1;
+while (i<=DIMSIZ( '}Dimensions' ));
+    sEl = DimNm ('}Dimensions',i);
+    if (SCAN( sPrefix, sEl )=1);
+        DimensionDestroy( sEl );
+    else;
+        i = i + 1;
+    endif;
+end;
+#EndRegion
+
+#Region processes
+i = 1;
+while (i<=DIMSIZ( '}Processes' ));
+    sEl = DimNm ('}Processes',i);
+    if (SCAN( sPrefix, sEl )=1);
+        ASCIIDelete( sEl | '.pro' );
+    endif;
+    i = i + 1;
+end;
+#EndRegion
+#endregion

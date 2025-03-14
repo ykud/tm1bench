@@ -1,0 +1,27 @@
+{
+	"@type":"Process",
+	"Name":"tm1bench Generate test data",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"tm1bench Generate test data.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pNumSalesCells",
+			"Prompt":"How many cells to populate in Sales cube",
+			"Value":1000000,
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pSalesFile",
+			"Prompt":"File with quantity data",
+			"Value":"tm1bench_sales.csv",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}
