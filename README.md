@@ -33,6 +33,11 @@ flowchart LR
 
 None at the moment
 
+Ideas:
+- a TI per test with logoutput of test timing
+- an overall Run Tests TI that will execute selected tests
+- simple things like 'CellIncrement random value / Read a total view' should allow playing with MTQ or VMM / VMT settings
+
 ## How to use
 
 1. Pull the `tm1bench` branch of this repository to your tm1 server (ideally an empty one, but it's not necessary)
