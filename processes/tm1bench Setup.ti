@@ -203,17 +203,8 @@ CubeRuleAppend( 'tm1bench Sales', 'FEEDERS;',0);
 CubeRuleAppend( 'tm1bench Sales', '[''Quantity'']=>[''Sales''],[''Discount''];',0);
 #EndRegion
 
-#Region generate and upload data
-sSalesFile = 'tm1bench_sales_data_'|NumberToString(Millitime())|'.csv';
-ExecuteProcess('tm1bench Generate test data',
-	'pNumSalesCells', pNumSalesCells,
-	'pSalesFile', sSalesFile );
-ExecuteProcess( 'tm1bench Sales load data',
-	'pSourceFile', sSalesFile,
-	'pDisableLogging', 'Y' );
-if (FileExists( sSalesFile )=1);
-    ASCIIDelete( sSalesFile );
-endif;
 
+#Region generate price and discount data
+ExecuteProcess('tm1bench Price and discount generate test data');
 #EndRegion
 #endregion

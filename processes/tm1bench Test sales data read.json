@@ -1,8 +1,8 @@
 {
 	"@type":"Process",
-	"Name":"tm1bench Sales load data",
+	"Name":"tm1bench Test sales data read",
 	"HasSecurityAccess":false,
-	"Code@Code.link":"tm1bench Sales load data.ti",
+	"Code@Code.link":"tm1bench Test sales data read.ti",
 	"UIData":"_ParameterConstraints=e30=\f",
 	"VariablesUIData":
 	[
@@ -15,22 +15,29 @@
 	],
 	"DataSource":
 	{
-		"Type":"ASCII",
-		"asciiDecimalSeparator":".",
-		"asciiDelimiterChar":",",
-		"asciiDelimiterType":"Character",
-		"asciiHeaderRecords":0,
-		"asciiQuoteCharacter":"\"",
-		"asciiThousandSeparator":",",
-		"dataSourceNameForClient":"model_upload/tm1bench_sales.csv",
-		"dataSourceNameForServer":"model_upload/tm1bench_sales.csv"
+		"Type":"TM1CubeView",
+		"dataSourceNameForClient":"tm1bench Sales",
+		"dataSourceNameForServer":"tm1bench Sales",
+		"view":"TIView"
 	},
 	"Parameters":
 	[
 		{
-			"Name":"pSourceFile",
-			"Prompt":"file to load from",
-			"Value":"tm1bench_sales.csv",
+			"Name":"pProduct",
+			"Prompt":"All or Random",
+			"Value":"All",
+			"Type":"String"
+		},
+		{
+			"Name":"pCustomer",
+			"Prompt":"All or Random",
+			"Value":"All",
+			"Type":"String"
+		},
+		{
+			"Name":"pResetCache",
+			"Prompt":"Y/N do a random write to reset Stargate cache",
+			"Value":"Y",
 			"Type":"String"
 		}
 	],

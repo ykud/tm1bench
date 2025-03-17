@@ -6,15 +6,8 @@ if (FileExists( pSourceFile )=0);
     ProcessError();
 else;
     DatasourceNameForServer = pSourceFile;
-endif; 
-if (pDisableLogging@='Y');
-    if (CubeExists('}CubeProperties')=1);
-        CellPutS('NO','}CubeProperties', sTargetCube, 'LOGGING' );
-    else;
-        logoutput('info','No }CubeProperties cube, must be on V12');
-    endif;
 endif;
-CubeClearData( sTargetCube );
+
 nRows = 0;
 nStartTime = Now();
 #endregion
@@ -23,11 +16,11 @@ CellIncrementN(vValue,sTargetCube, vVersion, vProduct, vCustomer, vMeasure, vMon
 nRows = nRows + 1;
 #endregion
 #region Epilog
-if (pDisableLogging@='Y');
-    if (CubeExists('}CubeProperties')=1);
-        CellPutS('YES','}CubeProperties', sTargetCube, 'LOGGING' );
-    endif;
-endif;
+
 nElapsedTime = ROUND ((NOW - nStartTime) / 0.000011574074074074);
-logoutput('info','Wrote ' | NumberToString(nRows)|' cells in '| NumberToString(nElapsedTime) |' seconds ,write speed ' | NumberToString(nRows\nElapsedTime) | ' cells per second' );
+logoutput('info','Wrote ' | NumberToString(nRows)|' cells in '| NumberToString(nElapsedTime) |' seconds ,write speed ' | NumberToString(nRows\nElapsedTime) | ' cells per second, from ' | pSourceFile );
+RunProcess( 'tm1bench Delete file',
+	'pFilename', pSourceFile );
+
+
 #endregion

@@ -1,0 +1,21 @@
+{
+	"@type":"Process",
+	"Name":"tm1bench Delete file",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"tm1bench Delete file.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pFilename",
+			"Prompt":"File to delete",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

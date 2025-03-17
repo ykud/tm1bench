@@ -43,53 +43,5 @@ end;
 
 #EndRegion
 
-#Region Prices & discounts
-# populate all data
-iCube = 1;
-while (iCube<=2);
-    if (iCube = 1);
-        sCube = 'tm1bench Price';
-        nScale = 100;
-    else;
-        sCube = 'tm1bench Discount';
-        nScale = 10^-1;
-    endif;
-    if (CubeExists( '}CubeProperties' )=1);
-        CellPutS('NO','}CubeProperties', sCube, 'LOGGING' );
-    endif;
-    sDim1 = TabDim (sCube,1);
-    sDim2 = TabDim (sCube,2);
-    sDim3 = TabDim (sCube,3);
-    sDim4 = TabDim (sCube,4);
-    nDimSize1 = DIMSIZ( sDim1 );
-    nDimSize2 = DIMSIZ( sDim2 );
-    nDimSize3 = DIMSIZ( sDim3 );
-    nDimSize4 = DIMSIZ( sDim4 );
-    i = 1;
-    while (i <= nDimSize1 * nDimSize2 * nDimSize3 * nDimSize4 );
-      nCoord1 = Mod(int(i/(nDimSize4*nDimSize3*nDimSize2)), nDimSize1) + 1; 
-      nCoord2 = Mod(int(i/(nDimSize4*nDimSize3)), nDimSize2) + 1;
-      nCoord3 = Mod(int(i/nDimSize4), nDimSize3) + 1;
-      nCoord4 = Mod(i, nDimSize4) + 1;
-      IF (CellIsUpdateable( sCube,
-                DimNm(sDim1,nCoord1),
-                DimNm(sDim2,nCoord2),
-                DimNm(sDim3,nCoord3),
-                DimNm(sDim4,nCoord4) )=1);
-              CellPutN(nScale * Rand(),
-                sCube,
-                DimNm(sDim1,nCoord1),
-                DimNm(sDim2,nCoord2),
-                DimNm(sDim3,nCoord3),
-                DimNm(sDim4,nCoord4));
-     endif;
-        i = i + 1;
-    end;    
-    if (CubeExists( '}CubeProperties' )=1);
-        CellPutS('YES','}CubeProperties', sCube, 'LOGGING' );
-    endif;
-    iCube = iCube + 1;
-end;
-#EndRegion
 
 #endregion

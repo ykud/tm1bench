@@ -1,0 +1,33 @@
+{
+	"@type":"Process",
+	"Name":"tm1bench Test sales data load",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"tm1bench Test sales data load.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pNumSalesCells",
+			"Prompt":"How many cells to populate in Sales cube",
+			"Value":10000000,
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pNumberOfThreads",
+			"Prompt":"How many threads to write in parallel",
+			"Value":1,
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pDisableLogging",
+			"Prompt":"Y/N, disable logging",
+			"Value":"Y",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

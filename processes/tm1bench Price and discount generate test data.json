@@ -1,0 +1,13 @@
+{
+	"@type":"Process",
+	"Name":"tm1bench Price and discount generate test data",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"tm1bench Price and discount generate test data.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":[],
+	"Variables":[]
+}

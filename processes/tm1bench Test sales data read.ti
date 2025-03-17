@@ -1,0 +1,74 @@
+#region Prolog
+sSourceCubeName = 'tm1bench Sales';
+sSourceViewName = GetProcessName() | '_' | NumberToString(Int(Rand *100000));
+nVersionIndex =  Int(Rand * Dimsiz('tm1bench Version'));
+nVersionIndex = if(nVersionIndex=0,1,nVersionIndex);
+sVersion = DimNm('tm1bench Version',nVersionIndex);
+if (pProduct@='Random');
+    nProductIndex =  Int(Rand * Dimsiz('tm1bench Product'));
+    nProductIndex = if(nProductIndex=0,1,nProductIndex);
+    sProduct = DimNm('tm1bench Product',nProductIndex);
+else;
+    sProduct = 'All product';
+endif;
+
+if (pCustomer@='Random');
+    nCustomerIndex =  Int(Rand * Dimsiz('tm1bench Customer'));
+    nCustomerIndex = if(nCustomerIndex=0,1,nCustomerIndex);
+    sCustomer = DimNm('tm1bench Customer',nCustomerIndex);
+else;
+    sCustomer = 'All customer';
+endif;    
+# Create Source view 
+if (ViewExists( sSourceCubeName, sSourceViewName) = 1);
+	 ViewDestroy(sSourceCubeName, sSourceViewName);
+endif;
+ViewCreate( sSourceCubeName, sSourceViewName, 1);
+ 
+i_TabDim = 1 ;
+While( TabDim( sSourceCubeName, i_TabDim ) @<> '' ) ;
+   sDim = TabDim( sSourceCubeName, i_TabDim ) ;
+    
+	If( sDim @= 'tm1bench Version') ;
+		sMDX = '{[ ' | sDim | ' ].['| sVersion |']}' ;
+	elseIf( sDim @= 'tm1bench Product' ) ;
+    	sMDX = '{[' | sDim | '].['| sProduct |']}' ;
+    elseIf( sDim @= 'tm1bench Customer' ) ;
+    	sMDX = '{[' | sDim | '].['| sCustomer |']}' ;
+    elseIf( sDim @= 'tm1bench Sales measure' ) ;
+        sMDX = '{[tm1bench Sales measure].MEMBERS}';
+    else;
+        sMDX = '{TM1FILTERBYLEVEL({ TM1SUBSETALL( [' | sDim | '] )},0)}';
+    endif;    
+    if (sMDX @<> '');
+        SubsetCreate( sDim, sSourceViewName, 1 );
+		SubsetMDXSet(sDim, sSourceViewName,sMDX ) ;
+		SubsetMDXSet(sDim, sSourceViewName,'') ;
+		ViewSubsetAssign( sSourceCubeName, sSourceViewName, sDim, sSourceViewName ) ;
+	endif;
+    i_TabDim = i_TabDim + 1 ;
+End;  
+
+ViewExtractSkipZeroesSet( sSourceCubeName, sSourceViewName, 1 ) ;
+ViewExtractSkipCalcsSet( sSourceCubeName, sSourceViewName, 0) ;
+ViewExtractSkipRuleValuesSet( sSourceCubeName, sSourceViewName, 0) ;
+
+DatasourceNameForServer = sSourceCubeName;
+DataSourceCubeView = sSourceViewName;
+
+if (pResetCache@='Y');
+    CellIncrementN( 1, sSourceCubeName, sVersion, 'Product 1', 'Customer 1', 'Quantity',  TIMST( Now, '\Y', 1 ) | '01');
+endif;
+
+nCells = 0;
+nStartTime = Now;
+#endregion
+#region Data
+
+nCells = nCells + 1;
+#endregion
+#region Epilog
+
+nElapsedTime = ROUND ((NOW - nStartTime) / 0.000011574074074074);
+logoutput('info','Read ' | NumberToString(nCells) | ' cells for ' | sVersion | ' / '| sCustomer | ' / '| sProduct| ' in ' | NumberToString(nElapsedTime) | ' seconds');
+#endregion

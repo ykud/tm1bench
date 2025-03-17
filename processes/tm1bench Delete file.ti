@@ -1,0 +1,6 @@
+#region Prolog
+if (FileExists( pFilename )=1);
+    ASCIIDelete( pFilename );
+endif;
+
+#endregion

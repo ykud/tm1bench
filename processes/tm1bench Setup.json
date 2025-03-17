@@ -33,12 +33,6 @@
 			"Prompt":"Number of versions",
 			"Value":3,
 			"Type":"Numeric"
-		},
-		{
-			"Name":"pNumSalesCells",
-			"Prompt":"How many cells to populate in Sales cube",
-			"Value":10000000,
-			"Type":"Numeric"
 		}
 	],
 	"Variables":[]
