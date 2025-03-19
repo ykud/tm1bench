@@ -1,0 +1,27 @@
+{
+	"@type":"Process",
+	"Name":"tm1bench Set cube logging",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"tm1bench Set cube logging.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pCube",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		},
+		{
+			"Name":"pLogging",
+			"Prompt":"",
+			"Value":"YES",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

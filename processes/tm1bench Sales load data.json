@@ -32,6 +32,12 @@
 			"Prompt":"file to load from",
 			"Value":"tm1bench_sales.csv",
 			"Type":"String"
+		},
+		{
+			"Name":"pFlagFile",
+			"Prompt":"file to put timestamp in once finished",
+			"Value":"",
+			"Type":"String"
 		}
 	],
 	"Variables":

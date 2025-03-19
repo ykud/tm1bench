@@ -1,8 +1,8 @@
 {
 	"@type":"Process",
-	"Name":"tm1bench Test sales data load",
+	"Name":"tm1bench Test sales data load parallel",
 	"HasSecurityAccess":false,
-	"Code@Code.link":"tm1bench Test sales data load.ti",
+	"Code@Code.link":"tm1bench Test sales data load parallel.ti",
 	"UIData":"_ParameterConstraints=e30=\f",
 	"DataSource":
 	{
@@ -14,6 +14,12 @@
 			"Name":"pNumSalesCells",
 			"Prompt":"How many cells to populate in Sales cube",
 			"Value":10000000,
+			"Type":"Numeric"
+		},
+		{
+			"Name":"pNumberOfThreads",
+			"Prompt":"How many threads to write in parallel",
+			"Value":1,
 			"Type":"Numeric"
 		},
 		{

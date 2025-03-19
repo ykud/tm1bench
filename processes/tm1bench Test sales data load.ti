@@ -1,61 +1,32 @@
 #region Prolog
 
 sTargetCube = 'tm1bench Sales';
-nCheckEvery = 5;
-# Maximum wait time for this process
-# let's assume the worst case of writing 10k records per second
-nMaxWaitSeconds =  Int(pNumSalesCells \ pNumberOfThreads * 10000 );
-if (pDisableLogging@='Y');
-    if (CubeExists('}CubeProperties')=1);
-        CellPutS('YES','}CubeProperties', sTargetCube, 'LOGGING' );
-    endif;
-endif;
-CubeClearData( sTargetCube );
-sUniqueIndex = NumberToString(Int(RAND * 100000));
-i = 1;
-
-while (i<=pNumberOfThreads);
-    sSalesFile = 'tm1bench_sales_data_'|NumberToString( i ) |'_'|sUniqueIndex|'.csv';
-    ExecuteProcess('tm1bench Sales generate test data',
-	'pNumSalesCells', int(pNumSalesCells \ pNumberOfThreads),
-	'pSalesFile', sSalesFile );
-    i = i + 1;
-end;
-# Run loads in parallel
-i = 1;
-while (i<=pNumberOfThreads);
-    sSalesFile = 'tm1bench_sales_data_'|NumberToString( i ) |'_'|sUniqueIndex|'.csv';
-    RunProcess( 'tm1bench Sales load data','pSourceFile', sSalesFile);
-    i = i + 1;
-end;
-
-# and let's wait for it complete
-
-bCheck = 1;
-nElapsedTime = 0;
-while (bCheck=1);
-    Sleep(nCheckEvery*1000);
-    bCheck = 0;
-    while (i<=pNumberOfThreads);
-        sSalesFile = 'tm1bench_sales_data_'|NumberToString( i ) |'_'|sUniqueIndex|'.csv';
-        if (FileExists( sSalesFile )=1);
-            bCheck = 1;
-        endif;
-        i = i + 1;
-    end;
-    nElapsedTime = nElapsedTime + nCheckEvery;
-    if (nElapsedTime>=nMaxWaitSeconds);
-        LogOutput( 'error', 'Waiting for over ' | NUmberToString(nElapsedTime) | ' seconds, something is broken' );
-        bCheck = 0;
-    endif;
-end;
-
 
 if (pDisableLogging@='Y');
     if (CubeExists('}CubeProperties')=1);
         CellPutS('NO','}CubeProperties', sTargetCube, 'LOGGING' );
+    endif;
+endif;
+
+CubeClearData( sTargetCube );
+
+
+sUniqueIndex = NumberToString(Int(RAND * 100000));
+
+sSalesFile = 'tm1bench_sales_data_' | sUniqueIndex|'.csv';
+ExecuteProcess('tm1bench Sales generate test data',
+	'pNumSalesCells', int(pNumSalesCells),
+	'pSalesFile', sSalesFile );
+ExecuteProcess( 'tm1bench Sales load data','pSourceFile', sSalesFile);
+
+AsciiDelete(sSalesFile);
+
+if (pDisableLogging@='Y');
+    if (CubeExists('}CubeProperties')=1);
+        CellPutS('YES','}CubeProperties', sTargetCube, 'LOGGING' );
     else;
         logoutput('info','No }CubeProperties cube, must be on V12');
     endif;
 endif;
+
 #endregion

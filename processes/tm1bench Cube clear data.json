@@ -1,0 +1,21 @@
+{
+	"@type":"Process",
+	"Name":"tm1bench Cube clear data",
+	"HasSecurityAccess":false,
+	"Code@Code.link":"tm1bench Cube clear data.ti",
+	"UIData":"_ParameterConstraints=e30=\f",
+	"DataSource":
+	{
+		"Type":"None"
+	},
+	"Parameters":
+	[
+		{
+			"Name":"pCube",
+			"Prompt":"",
+			"Value":"",
+			"Type":"String"
+		}
+	],
+	"Variables":[]
+}

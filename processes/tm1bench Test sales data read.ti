@@ -61,7 +61,7 @@ if (pResetCache@='Y');
 endif;
 
 nCells = 0;
-nStartTime = Now;
+nStartTime = Millitime();
 #endregion
 #region Data
 
@@ -69,6 +69,6 @@ nCells = nCells + 1;
 #endregion
 #region Epilog
 
-nElapsedTime = ROUND ((NOW - nStartTime) / 0.000011574074074074);
+nElapsedTime = (Millitime() - nStartTime) / 1000;
 logoutput('info','Read ' | NumberToString(nCells) | ' cells for ' | sVersion | ' / '| sCustomer | ' / '| sProduct| ' in ' | NumberToString(nElapsedTime) | ' seconds');
 #endregion

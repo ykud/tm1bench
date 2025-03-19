@@ -9,7 +9,7 @@ else;
 endif;
 
 nRows = 0;
-nStartTime = Now();
+nStartTime = Millitime();
 #endregion
 #region Data
 CellIncrementN(vValue,sTargetCube, vVersion, vProduct, vCustomer, vMeasure, vMonth );
@@ -17,10 +17,11 @@ nRows = nRows + 1;
 #endregion
 #region Epilog
 
-nElapsedTime = ROUND ((NOW - nStartTime) / 0.000011574074074074);
-logoutput('info','Wrote ' | NumberToString(nRows)|' cells in '| NumberToString(nElapsedTime) |' seconds ,write speed ' | NumberToString(nRows\nElapsedTime) | ' cells per second, from ' | pSourceFile );
-RunProcess( 'tm1bench Delete file',
-	'pFilename', pSourceFile );
+nElapsedTime = ( Millitime() - nStartTime) \ 1000;
+logoutput('info','Wrote ' | NumberToString(nRows)|' cells in '| NumberToString(nElapsedTime) |' seconds ,write speed ' | NumberToString(Round(nRows\nElapsedTime)) | ' cells per second, from ' | pSourceFile );
+if (pFlagFile@<>'');
+    ASCIIOutput( pFlagFile, NumberToString(now) );
+endif;
 
 
 #endregion

@@ -4,19 +4,11 @@
 
 #Region Data load
 
+logoutput('info','Load data single thread');
 
-logoutput('info','Load data sequentially');
 ExecuteProcess( 'tm1bench Test sales data load',
 	'pNumSalesCells', pNumSalesCells,
-	'pNumberOfThreads', 1,
 	'pDisableLogging', 'Y' );
-
-logoutput('info','Load data in 2 threads, expect close to 2x speed up');
-ExecuteProcess( 'tm1bench Test sales data load',
-	'pNumSalesCells', pNumSalesCells,
-	'pNumberOfThreads', 2,
-	'pDisableLogging', 'Y' );
-
 
 #EndRegion
 
@@ -33,5 +25,14 @@ ExecuteProcess( 'tm1bench Test sales data read',
 	'pProduct', 'Random',
 	'pCustomer', 'All',
 	'pResetCache', 'Y' );
+#EndRegion
+
+#Region data load in parallel
+RunProcess( 'tm1bench Test sales data load parallel',
+	'pNumSalesCells', pNumSalesCells,
+	'pNumberOfThreads', 2,
+	'pDisableLogging', 'Y' );
+
+
 #EndRegion
 #endregion
