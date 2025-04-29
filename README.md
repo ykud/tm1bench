@@ -31,7 +31,10 @@ flowchart LR
 
 ## Tests available
 
-None at the moment
+- `Test sales data load` - single threaded data load
+- `Test sales data read` - read either a total consolidated cell (`'pProduct', 'All','pCustomer', 'All'`) or a random product or customer (`'pProduct', 'Random','pCustomer', 'Random'`)
+- `Test sales data load parallel` - running data load in mutliple threads
+
 
 Ideas:
 - a TI per test with logoutput of test timing
@@ -42,4 +45,5 @@ Ideas:
 
 1. Pull the `tm1bench` branch of this repository to your tm1 server (ideally an empty one, but it's not necessary)
 2. Run `tm1bench Setup` with the parameters of how many elements you want in the dimensions and how much data to have in sales cube (as a rule of thumb, 10 million cells translate to 100 Mb RAM Sales cube)
-3. After you're done run `tm1bench Cleanup` and it'll remove all the generated objects. It will delete the TI process files, but they will still be visible until a model restart.
+3. Run `tm1bench Run tests` -- it will execute the tests and record results in tm1server.log file
+4. After you're done run `tm1bench Cleanup` and it'll remove all the generated objects. It will delete the TI process files, but they will still be visible until a model restart.
